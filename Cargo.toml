@@ -9,9 +9,19 @@ edition = "2021"
 opt-level = 3
 
 [dependencies]
+anyhow = "1.0.68"
+dotenvy = "0.15.6"
 teloxide = { version = "0.12", features = ["macros"] }
 log = "0.4"
 pretty_env_logger = "0.4"
-tokio = { version =  "1.8", features = ["rt-multi-thread", "macros"] }
+tokio = { version =  "1.8", features = ["full"] }
 # tokio + rustls
-sqlx = { version = "0.6", features = [ "runtime-tokio-rustls", "postgres", "macros", "migrate", "time", "tls", "offline" ] }
+sqlx = { version = "0.6", features = [ 
+    "runtime-tokio-rustls", 
+    "postgres", 
+    "macros", 
+    "migrate", 
+    "time", 
+    "tls", 
+    "offline" 
+] }

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS jurors (
     telegram_id bigint NOT NULL UNIQUE,
     kindness real NOT NULL,
     skill real NOT NULL,
+    available boolean NOT NULL,
 
     player_id bigserial REFERENCES players(id)
 );
