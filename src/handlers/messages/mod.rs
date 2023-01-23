@@ -1,5 +1,5 @@
 use teloxide::{
-    payloads::SendMessage,
+    payloads::{SendMessage, SendMessageSetters},
     requests::{JsonRequest, Requester},
     types::{ChatId, Message},
 };
@@ -14,8 +14,18 @@ pub trait MessageHandler: Handler<Message> {
         self.update().chat.id
     }
 
-    fn reply_text(&self, text: impl Into<String>) -> JsonRequest<SendMessage> {
+    fn message_id(&self) -> teloxide::types::MessageId {
+        self.update().id
+    }
+
+    fn send_text(&self, text: impl Into<String>) -> JsonRequest<SendMessage> {
         self.bot().send_message(self.chat_id(), text)
+    }
+
+    fn reply_text(&self, text: impl Into<String>) -> JsonRequest<SendMessage> {
+        self.send_text(text)
+            .reply_to_message_id(self.message_id())
+            .allow_sending_without_reply(true)
     }
 }
 
