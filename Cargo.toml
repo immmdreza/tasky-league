@@ -1,3 +1,6 @@
+[workspace]
+members = ["macros"]
+
 [package]
 name = "tasky-league"
 version = "0.1.0"
@@ -9,8 +12,11 @@ edition = "2021"
 opt-level = 3
 
 [dependencies]
+macros = { version = "0.1.0", path = "macros" }
+engineer = "0.1.3"
 anyhow = "1.0.68"
 dotenvy = "0.15.6"
+async-trait = "0.1.62"
 teloxide = { version = "0.12", features = ["macros"] }
 log = "0.4"
 pretty_env_logger = "0.4"
