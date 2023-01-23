@@ -1,9 +1,13 @@
 pub mod database;
+pub mod extensions;
 pub mod handlers;
 
 use database::context::DbContext;
 use handlers::{
-    messages::{commands::CommandsMessageHandler, unexpected::UnexpectedMessageHandler},
+    messages::{
+        commands::CommandsMessageHandler, register::RegisterMessageHandler,
+        unexpected::UnexpectedMessageHandler,
+    },
     Handler,
 };
 use teloxide::prelude::*;
@@ -22,7 +26,11 @@ async fn main() -> anyhow::Result<()> {
         bot,
         Update::filter_message()
             .branch(CommandsMessageHandler::branch())
-            .branch(UnexpectedMessageHandler::branch()),
+            .branch(
+                Message::filter_text()
+                    .branch(UnexpectedMessageHandler::branch())
+                    .branch(RegisterMessageHandler::branch()),
+            ),
     )
     .dependencies(dptree::deps![ctx])
     .enable_ctrlc_handler()

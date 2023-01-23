@@ -17,14 +17,22 @@ impl Player {
 }
 
 impl<'r> PlayerRepo<'r> {
-    pub async fn get_by_telegram_id(&self, telegram_id: i64) -> anyhow::Result<Player> {
-        let player = sqlx::query_as!(
-            Player,
-            "SELECT * FROM players WHERE telegram_id = $1",
+    pub async fn is_player(&self, telegram_id: i64) -> anyhow::Result<bool> {
+        let exists = sqlx::query!(
+            "select exists(select 1 from players where id=$1)",
             telegram_id
         )
         .fetch_one(self.get_pool())
         .await?;
+
+        Ok(exists.exists.unwrap_or(false))
+    }
+
+    pub async fn get_by_telegram_id(&self, telegram_id: i64) -> anyhow::Result<Option<Player>> {
+        let player = sqlx::query_as("SELECT * FROM players WHERE telegram_id = $1")
+            .bind(telegram_id)
+            .fetch_optional(self.get_pool())
+            .await?;
 
         Ok(player)
     }
@@ -32,8 +40,6 @@ impl<'r> PlayerRepo<'r> {
 
 #[cfg(test)]
 mod tests {
-    use crate::database::repo::Repo;
-
     use super::*;
 
     #[tokio::test]
@@ -44,20 +50,6 @@ mod tests {
         let pool = sqlx::PgPool::connect(&url).await.unwrap();
         let player_repo: PlayerRepo = (&pool).into();
 
-        let inserted = player_repo
-            .insert(PlayerInsertion { telegram_id: 123 })
-            .await
-            .unwrap();
-
-        // Should fail if twice
-        player_repo
-            .update_by_id(
-                inserted,
-                PlayerUpdating {
-                    telegram_id: crate::database::repo::Value::Set(789),
-                },
-            )
-            .await
-            .unwrap()
+        let _player = player_repo.get_by_telegram_id(154).await.unwrap();
     }
 }

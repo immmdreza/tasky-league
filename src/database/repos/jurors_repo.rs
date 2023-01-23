@@ -36,6 +36,30 @@ impl Juror {
     }
 }
 
+impl JurorRepo<'_> {
+    pub async fn is_juror(&self, player_id: i64) -> anyhow::Result<bool> {
+        let res = sqlx::query!(
+            "select exists(select 1 from jurors where player_id = $1)",
+            player_id
+        )
+        .fetch_one(self.get_pool())
+        .await?;
+
+        Ok(res.exists.unwrap_or_default())
+    }
+
+    pub async fn is_juror_by_telegram_id(&self, telegram_id: i64) -> anyhow::Result<bool> {
+        let res = sqlx::query!(
+            "select exists(select 1 from jurors where telegram_id = $1)",
+            telegram_id
+        )
+        .fetch_one(self.get_pool())
+        .await?;
+
+        Ok(res.exists.unwrap_or_default())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -54,7 +78,7 @@ mod tests {
         let player_repo = PlayerRepo::new(&pool);
         let juror_repo = JurorRepo::new(&pool);
 
-        let player = player_repo.get_by_telegram_id(789).await.unwrap();
+        let player = player_repo.get_by_telegram_id(789).await.unwrap().unwrap();
 
         juror_repo
             .insert(JurorInsertion {

@@ -32,7 +32,7 @@ where
 {
     fn get_id(&self) -> &ID;
 
-    fn get_wrapper<'m, T, M>(&'m self) -> UpdatingWrapper<'m, ID, T, Self>
+    fn get_wrapper<T, M>(&self) -> UpdatingWrapper<'_, ID, T, Self>
     where
         T: Updating,
         Self: Sized,

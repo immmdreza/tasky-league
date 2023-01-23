@@ -25,3 +25,10 @@ where
 
     fn branch() -> HandlerType<Self::Output>;
 }
+
+pub fn pass_filter<T>() -> HandlerType<T>
+where
+    T: 'static + Sync + Send,
+{
+    teloxide::dptree::filter(|| true)
+}
