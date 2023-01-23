@@ -28,8 +28,8 @@ async fn main() -> anyhow::Result<()> {
             .branch(CommandsMessageHandler::branch())
             .branch(
                 Message::filter_text()
-                    .branch(UnexpectedMessageHandler::branch())
-                    .branch(RegisterMessageHandler::branch()),
+                    .branch(RegisterMessageHandler::branch())
+                    .branch(UnexpectedMessageHandler::branch()),
             ),
     )
     .dependencies(dptree::deps![ctx])
