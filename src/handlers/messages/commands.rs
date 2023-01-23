@@ -1,5 +1,6 @@
-use macros::handler;
-use teloxide::macros::BotCommands;
+use teloxide::{filter_command, macros::BotCommands};
+
+use crate::handlers::*;
 
 use super::MessageHandler;
 
@@ -22,4 +23,8 @@ pub async fn commands(ctx: CommandsMessageHandler) -> anyhow::Result<()> {
     }
 
     Ok(())
+}
+
+pub fn filter_builder() -> HandlerType<anyhow::Result<()>> {
+    filter_command::<Command, _>()
 }

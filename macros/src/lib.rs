@@ -191,6 +191,10 @@ pub fn model(input: TokenStream) -> TokenStream {
 struct MacroArgs {
     #[darling(rename = "for")]
     for_update: String,
+
+    #[darling(rename = "filter")]
+    filter_builder: Option<String>,
+
     #[darling(multiple, rename = "param")]
     extra_params: Vec<String>,
 }
@@ -230,6 +234,12 @@ pub fn handler(args: TokenStream, input: TokenStream) -> TokenStream {
     let extra_params_name_1 = extra_params_name.clone();
     let extra_params_name_2 = extra_params_name.clone();
 
+    let get_filter_func: proc_macro2::TokenStream = args
+        .filter_builder
+        .unwrap_or("filter_builder".to_owned())
+        .parse()
+        .unwrap();
+
     let tokens = quote! {
         #input
 
@@ -241,7 +251,7 @@ pub fn handler(args: TokenStream, input: TokenStream) -> TokenStream {
         }
 
         impl #struct_name {
-            pub async fn handle(bot: teloxide::Bot, update: #update_path, #(#extra_params_name_1: #extra_params_ty_1,)*) -> anyhow::Result<()> {
+            pub async fn handle(bot: teloxide::Bot, update: #update_path, #(#extra_params_name_1: #extra_params_ty_1,)*) -> <Self as crate::handlers::Handler<#update_path>>::Output {
                 let handler  = Self {
                     bot,
                     update,
@@ -253,14 +263,23 @@ pub fn handler(args: TokenStream, input: TokenStream) -> TokenStream {
             }
         }
 
-        #[async_trait::async_trait(?Send)]
         impl crate::handlers::Handler<#update_path> for #struct_name {
+            type Output = anyhow::Result<()>;
+
             fn bot(&self) -> &teloxide::Bot {
                 &self.bot
             }
 
             fn update(&self) -> &#update_path{
                 &self.update
+            }
+
+            fn get_filter() -> crate::handlers::HandlerType<Self::Output> {
+                #get_filter_func()
+            }
+
+            fn branch() -> HandlerType<Self::Output> {
+                Self::get_filter().endpoint(Self::handle)
             }
         }
     };

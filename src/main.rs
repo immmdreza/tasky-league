@@ -2,7 +2,10 @@ pub mod database;
 pub mod handlers;
 
 use database::context::DbContext;
-use handlers::messages::commands::{Command, CommandsMessageHandler};
+use handlers::{
+    messages::{commands::CommandsMessageHandler, unexpected::UnexpectedMessageHandler},
+    Handler,
+};
 use teloxide::prelude::*;
 
 #[tokio::main]
@@ -18,8 +21,8 @@ async fn main() -> anyhow::Result<()> {
     Dispatcher::builder(
         bot,
         Update::filter_message()
-            .filter_command::<Command>()
-            .endpoint(CommandsMessageHandler::handle),
+            .branch(CommandsMessageHandler::branch())
+            .branch(UnexpectedMessageHandler::branch()),
     )
     .dependencies(dptree::deps![ctx])
     .enable_ctrlc_handler()

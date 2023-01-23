@@ -1,15 +1,27 @@
 pub mod messages;
 
 pub use macros::handler;
-pub use teloxide::Bot;
 
-// pub type ReturnType = Result<(), Box<dyn Error + Sync + Send>>;
+pub type HandlerType<T> = teloxide::prelude::Handler<
+    'static,
+    teloxide::prelude::DependencyMap,
+    T,
+    teloxide::dispatching::DpHandlerDescription,
+>;
 
 pub trait Handler<T>
 where
     T: Sync + Send,
+    Self::Output: Send + Sync,
+    Self::Output: 'static,
 {
-    fn bot(&self) -> &Bot;
+    type Output;
+
+    fn bot(&self) -> &teloxide::Bot;
 
     fn update(&self) -> &T;
+
+    fn get_filter() -> HandlerType<Self::Output>;
+
+    fn branch() -> HandlerType<Self::Output>;
 }

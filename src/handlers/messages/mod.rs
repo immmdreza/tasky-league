@@ -7,6 +7,7 @@ use teloxide::{
 use super::Handler;
 
 pub mod commands;
+pub mod unexpected;
 
 pub trait MessageHandler: Handler<Message> {
     fn chat_id(&self) -> ChatId {
