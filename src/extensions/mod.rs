@@ -1,6 +1,6 @@
 use teloxide::{
     payloads::SendMessageSetters,
-    types::{KeyboardButton, KeyboardMarkup},
+    types::{KeyboardButton, KeyboardMarkup, KeyboardRemove},
 };
 
 pub trait SendMessageSettersExt: SendMessageSetters {
@@ -19,6 +19,10 @@ pub trait SendMessageSettersExt: SendMessageSetters {
             .into_iter()
             .map(|f: R| f.into_iter().map(KeyboardButton::new));
         self.reply_markup(KeyboardMarkup::new(b).resize_keyboard(true))
+    }
+
+    fn remove_keyboards(self) -> Self {
+        self.reply_markup(KeyboardRemove::new())
     }
 }
 

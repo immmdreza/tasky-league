@@ -9,11 +9,13 @@ use handlers::{
     },
     Handler,
 };
-use teloxide::prelude::*;
+use teloxide::{prelude::*, dispatching::dialogue::InMemStorage};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenvy::dotenv()?;
+    pretty_env_logger::init();
+    log::info!("Starting command bot...");
 
     let url = std::env::var("DATABASE_URL")?;
     let pool = sqlx::PgPool::connect(&url).await?;
@@ -32,7 +34,7 @@ async fn main() -> anyhow::Result<()> {
                     .branch(UnexpectedMessageHandler::branch()),
             ),
     )
-    .dependencies(dptree::deps![ctx])
+    .dependencies(dptree::deps![ctx, InMemStorage::<register_dialogue::RegisterState>::new()])
     .enable_ctrlc_handler()
     .build()
     .dispatch()
