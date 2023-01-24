@@ -10,6 +10,7 @@ use super::Handler;
 
 pub mod commands;
 pub mod register_dialogue;
+pub mod search;
 pub mod unexpected;
 
 pub trait MessageHandler: Handler<Message> {
