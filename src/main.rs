@@ -5,8 +5,7 @@ pub mod handlers;
 use database::context::DbContext;
 use handlers::{
     messages::{
-        commands::CommandsMessageHandler, register::RegisterMessageHandler,
-        unexpected::UnexpectedMessageHandler,
+        commands::CommandsMessageHandler, register_dialogue, unexpected::UnexpectedMessageHandler,
     },
     Handler,
 };
@@ -29,7 +28,7 @@ async fn main() -> anyhow::Result<()> {
             .branch(
                 Message::filter_text()
                     .branch(UnexpectedMessageHandler::branch())
-                    .branch(RegisterMessageHandler::branch()),
+                    .branch(register_dialogue::branch()),
             ),
     )
     .dependencies(dptree::deps![ctx])

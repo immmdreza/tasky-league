@@ -113,7 +113,7 @@ pub fn model(input: TokenStream) -> TokenStream {
     let expanded = quote! {
         #[derive(Debug, Default)]
         #vis struct #insertion_name {
-            #(#insertion_fields,)*
+            #(#vis #insertion_fields,)*
         }
 
         impl From<#name> for #insertion_name {
@@ -160,7 +160,7 @@ pub fn model(input: TokenStream) -> TokenStream {
                 let model = model.into();
                 let inserted = sqlx::query!(
                     #insert_query,
-                    #(model.#insertion_fields_names_2,)*
+                    #(model.#insertion_fields_names_2 as _,)*
                 )
                 .fetch_one(self.get_pool())
                 .await?;
@@ -171,7 +171,7 @@ pub fn model(input: TokenStream) -> TokenStream {
 
         #[derive(Debug, Default)]
         #vis struct #updating_name {
-            #(#updating_fields,)*
+            #(#vis #updating_fields,)*
         }
 
         impl crate::database::repo::Updating for #updating_name {
@@ -236,7 +236,7 @@ pub fn handler(args: TokenStream, input: TokenStream) -> TokenStream {
 
     let get_filter_func: proc_macro2::TokenStream = args
         .filter_builder
-        .unwrap_or("filter_builder".to_owned())
+        .unwrap_or_else(|| "filter_builder".to_owned())
         .parse()
         .unwrap();
 

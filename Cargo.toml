@@ -15,19 +15,23 @@ opt-level = 3
 macros = { version = "0.1.0", path = "macros" }
 engineer = "0.1.3"
 anyhow = "1.0.68"
+thiserror = "1.0.38"
 dotenvy = "0.15.6"
 async-trait = "0.1.62"
+strum = "0.24"
+strum_macros = "0.24"
+serde_json = { version = "1.0", features = ["raw_value"] }
 teloxide = { version = "0.12", features = ["macros"] }
 log = "0.4"
 pretty_env_logger = "0.4"
-tokio = { version =  "1.8", features = ["full"] }
+tokio = { version = "1.8", features = ["full"] }
 # tokio + rustls
-sqlx = { version = "0.6", features = [ 
-    "runtime-tokio-rustls", 
-    "postgres", 
-    "macros", 
-    "migrate", 
-    "time", 
-    "tls", 
-    "offline" 
+sqlx = { version = "0.6", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "macros",
+    "migrate",
+    "time",
+    "tls",
+    "offline",
 ] }

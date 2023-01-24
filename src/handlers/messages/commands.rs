@@ -1,10 +1,8 @@
-use teloxide::{filter_command, macros::BotCommands};
+use teloxide::filter_command;
+use teloxide::macros::BotCommands;
 
 use crate::extensions::SendMessageSettersExt;
-use crate::handlers::*;
-
-use super::MessageHandler;
-use crate::database::{DbContext, JurorRepo, Model, PlayerRepo};
+use crate::handlers::prelude::*;
 
 #[derive(Debug, BotCommands, Clone)]
 #[command(
@@ -23,7 +21,7 @@ pub async fn commands(ctx: CommandsMessageHandler) -> anyhow::Result<()> {
     match ctx.command {
         Command::Start => {
             let player = players_repo
-                .get_by_telegram_id(ctx.sender_id().unwrap_or_default() as i64)
+                .get_by_telegram_id(ctx.sender_id()? as i64)
                 .await?;
             if let Some(player) = player {
                 if jurors_repo.is_juror(*player.get_id()).await? {
