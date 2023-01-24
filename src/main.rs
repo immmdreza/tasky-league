@@ -27,6 +27,7 @@ async fn main() -> anyhow::Result<()> {
             .branch(CommandsMessageHandler::branch())
             .branch(
                 Message::filter_text()
+                    // Resolved
                     .branch(UnexpectedMessageHandler::branch())
                     .branch(register_dialogue::branch()),
             ),
