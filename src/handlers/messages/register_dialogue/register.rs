@@ -23,7 +23,7 @@ pub(super) async fn register(ctx: RegisterMessageHandler) -> anyhow::Result<()> 
 
         ctx.reply_text(text).await?;
     } else {
-        ctx.reply_text("Ok let me register you son or daughter maybe?")
+        ctx.reply_text("Ok let me register you son ... or daughter maybe?")
             .await?;
         ctx.reply_text("What's your gender?")
             .keyboard_buttons(vec![vec!["Male", "Female"], vec!["None binary"]])

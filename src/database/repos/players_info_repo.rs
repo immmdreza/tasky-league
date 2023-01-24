@@ -6,7 +6,7 @@ use sqlx::FromRow;
 use strum_macros::EnumString;
 
 #[derive(sqlx::Type, Debug, Default, Clone, Copy, EnumString)]
-#[sqlx(type_name = "service_state", rename_all = "snake_case")]
+#[sqlx(type_name = "gender", rename_all = "snake_case")]
 pub enum Gender {
     #[default]
     Male,

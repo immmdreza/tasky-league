@@ -1,4 +1,3 @@
-pub mod finish_register;
 pub mod received_gender;
 pub mod register;
 pub mod unexpected;
@@ -10,8 +9,7 @@ use crate::{
     handlers::{Handler, HandlerType},
 };
 
-use self::{
-    finish_register::FinishRegisterMessageHandler, received_gender::ReceivedGenderMessageHandler,
+use self::{ received_gender::ReceivedGenderMessageHandler,
     register::RegisterMessageHandler, unexpected::UnexpectedMessageHandler,
 };
 
@@ -31,6 +29,5 @@ pub fn branch() -> HandlerType<anyhow::Result<()>> {
     teloxide::dispatching::dialogue::enter::<Message, InMemStorage<RegisterState>, RegisterState, _>()
         .branch(RegisterMessageHandler::branch())
         .branch(ReceivedGenderMessageHandler::branch())
-        .branch(FinishRegisterMessageHandler::branch())
         .branch(UnexpectedMessageHandler::branch())
 }
