@@ -1,5 +1,6 @@
-pub mod prelude;
 pub mod messages;
+pub mod prelude;
+pub mod role_based;
 
 pub use macros::handler;
 

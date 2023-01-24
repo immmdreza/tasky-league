@@ -1,15 +1,17 @@
 pub mod database;
 pub mod extensions;
 pub mod handlers;
+pub mod roles;
 
 use database::context::DbContext;
 use handlers::{
     messages::{
         commands::CommandsMessageHandler, register_dialogue, unexpected::UnexpectedMessageHandler,
     },
+    role_based::role,
     Handler,
 };
-use teloxide::prelude::*;
+use teloxide::{dispatching::MessageFilterExt, prelude::*};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -23,14 +25,14 @@ async fn main() -> anyhow::Result<()> {
 
     Dispatcher::builder(
         bot,
-        Update::filter_message()
-            .branch(CommandsMessageHandler::branch())
-            .branch(
-                Message::filter_text()
-                    // Resolved
-                    .branch(register_dialogue::branch())
-                    .branch(UnexpectedMessageHandler::branch()),
-            ),
+        teloxide::dptree::entry().branch(
+            Update::filter_message()
+                .chain(Message::filter_text())
+                .branch(role::branch())
+                .branch(CommandsMessageHandler::branch())
+                .branch(register_dialogue::branch())
+                .branch(UnexpectedMessageHandler::branch()),
+        ),
     )
     .dependencies(dptree::deps![ctx])
     .enable_ctrlc_handler()
