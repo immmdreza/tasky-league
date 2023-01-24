@@ -3,6 +3,7 @@ use teloxide::types::{CallbackQuery, Message, UserId};
 use crate::handlers::HandlerType;
 
 pub mod arash;
+pub mod player;
 
 #[derive(Debug, Clone)]
 pub struct IdentifyCredit(UserId);
@@ -21,7 +22,7 @@ impl From<IdentifyCredit> for u64 {
 
 impl PartialEq<u64> for IdentifyCredit {
     fn eq(&self, other: &u64) -> bool {
-        self.0.0 == *other
+        self.0 .0 == *other
     }
 }
 
@@ -38,7 +39,7 @@ pub trait Role: Clone + Send + Sync + Sized + 'static {
     {
         teloxide::dptree::filter_map(|msg: Message| {
             let user = msg.from()?;
-            Some(user.id)
+            Some(IdentifyCredit(user.id))
         })
         .chain(Self::map_identify())
     }
@@ -49,7 +50,7 @@ pub trait Role: Clone + Send + Sync + Sized + 'static {
     {
         teloxide::dptree::filter_map(|callback: CallbackQuery| {
             let user = callback.from;
-            Some(user.id)
+            Some(IdentifyCredit(user.id))
         })
         .chain(Self::map_identify())
     }

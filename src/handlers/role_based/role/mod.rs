@@ -8,6 +8,7 @@ use crate::handlers::{Handler, HandlerType};
 use self::{arash::ArashRoleMessageHandler, no_role::NoRoleMessageHandler};
 
 #[derive(Debug, Clone, BotCommands)]
+#[command(rename_rule = "lowercase")]
 pub enum RoleCommand {
     Role,
 }

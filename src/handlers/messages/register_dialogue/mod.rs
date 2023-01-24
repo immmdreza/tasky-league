@@ -9,8 +9,9 @@ use crate::{
     handlers::{Handler, HandlerType},
 };
 
-use self::{ received_gender::ReceivedGenderMessageHandler,
-    register::RegisterMessageHandler, unexpected::UnexpectedMessageHandler,
+use self::{
+    received_gender::ReceivedGenderMessageHandler, register::RegisterMessageHandler,
+    unexpected::UnexpectedMessageHandler,
 };
 
 #[derive(Debug, Clone, Default)]
@@ -26,8 +27,15 @@ pub enum RegisterState {
 pub type RegisterDialogue = Dialogue<RegisterState, InMemStorage<RegisterState>>;
 
 pub fn branch() -> HandlerType<anyhow::Result<()>> {
-    teloxide::dispatching::dialogue::enter::<Message, InMemStorage<RegisterState>, RegisterState, _>()
+    teloxide::dptree::filter(|text: String| text == "Register").chain(
+        teloxide::dispatching::dialogue::enter::<
+            Message,
+            InMemStorage<RegisterState>,
+            RegisterState,
+            _,
+        >()
         .branch(RegisterMessageHandler::branch())
         .branch(ReceivedGenderMessageHandler::branch())
-        .branch(UnexpectedMessageHandler::branch())
+        .branch(UnexpectedMessageHandler::branch()),
+    )
 }
