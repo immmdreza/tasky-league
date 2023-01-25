@@ -7,9 +7,7 @@ use std::sync::Arc;
 
 use database::context::DbContext;
 use handlers::{
-    messages::{
-        commands::CommandsMessageHandler, register_dialogue, unexpected::UnexpectedMessageHandler,
-    },
+    messages::{commands::CommandsMessageHandler, register, unexpected::UnexpectedMessageHandler},
     role_based::role,
     Handler,
 };
@@ -39,13 +37,13 @@ async fn main() -> anyhow::Result<()> {
                 .branch(role::branch())
                 .branch(search::branch())
                 .branch(CommandsMessageHandler::branch())
-                .branch(register_dialogue::branch())
+                .branch(register::branch())
                 .branch(UnexpectedMessageHandler::branch()),
         ),
     )
     .dependencies(dptree::deps![
         ctx,
-        InMemStorage::<register_dialogue::RegisterState>::new()
+        InMemStorage::<register::RegisterState>::new()
     ])
     .enable_ctrlc_handler()
     .build()

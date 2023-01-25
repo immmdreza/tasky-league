@@ -28,14 +28,9 @@ pub(super) async fn received_gender(ctx: ReceivedGenderMessageHandler) -> anyhow
 
                 ctx.register_dialogue.exit().await?;
 
-                let mut text = "Everything is done".to_string();
-                text.push_str(match gender {
-                    players_info_repo::Gender::Male => " son!",
-                    players_info_repo::Gender::Female => " daughter!",
-                    players_info_repo::Gender::NoneBinary => " :)",
-                });
-
-                ctx.reply_text(text).remove_keyboards().await?;
+                ctx.reply_text(format!("Everything is done {}", gender.to_fun()))
+                    .remove_keyboards()
+                    .await?;
             }
             "Cancel" => {
                 ctx.register_dialogue.exit().await?;

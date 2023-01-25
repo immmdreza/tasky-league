@@ -24,11 +24,10 @@ pub enum RegisterState {
     },
 }
 
-pub type RegisterDialogue = Dialogue<RegisterState, InMemStorage<RegisterState>>;
+pub(self) type RegisterDialogue = Dialogue<RegisterState, InMemStorage<RegisterState>>;
 
 pub fn branch() -> HandlerType<anyhow::Result<()>> {
-    teloxide::dptree::filter(|text: String| text == "Register").chain(
-        teloxide::dispatching::dialogue::enter::<
+    teloxide::dispatching::dialogue::enter::<
             Message,
             InMemStorage<RegisterState>,
             RegisterState,
@@ -36,6 +35,5 @@ pub fn branch() -> HandlerType<anyhow::Result<()>> {
         >()
         .branch(RegisterMessageHandler::branch())
         .branch(ReceivedGenderMessageHandler::branch())
-        .branch(UnexpectedMessageHandler::branch()),
-    )
+        .branch(UnexpectedMessageHandler::branch())
 }

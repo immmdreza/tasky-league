@@ -6,6 +6,12 @@ pub mod arash;
 pub mod player;
 
 #[derive(Debug, Clone)]
+pub enum RawRole {
+    Arash,
+    Player,
+}
+
+#[derive(Debug, Clone)]
 pub struct IdentifyCredit(UserId);
 
 impl IdentifyCredit {
@@ -28,6 +34,7 @@ impl PartialEq<u64> for IdentifyCredit {
 
 pub trait Role: Clone + Send + Sync + Sized + 'static {
     const TAG: &'static str;
+    const RAW: RawRole;
 
     fn map_identify<T>() -> HandlerType<T>
     where

@@ -16,6 +16,17 @@ pub enum Gender {
     NoneBinary,
 }
 
+impl Gender {
+    pub fn to_fun(&self) -> String {
+        (match self {
+            Gender::Male => "son!",
+            Gender::Female => "daughter!",
+            Gender::NoneBinary => ":)",
+        })
+        .to_string()
+    }
+}
+
 impl Display for Gender {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
