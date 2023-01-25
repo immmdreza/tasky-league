@@ -8,9 +8,9 @@ use self::errors::MessageHasNoSender;
 
 use super::Handler;
 
-pub mod commands;
 pub mod register;
 pub mod search;
+pub mod start;
 pub mod unexpected;
 
 pub trait MessageHandler: Handler<Message> {

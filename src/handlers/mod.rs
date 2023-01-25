@@ -3,19 +3,15 @@ pub mod prelude;
 pub mod role_based;
 
 pub use macros::handler;
+use teloxide::{dispatching::DpHandlerDescription, prelude::DependencyMap};
 
-pub type HandlerType<T> = teloxide::prelude::Handler<
-    'static,
-    teloxide::prelude::DependencyMap,
-    T,
-    teloxide::dispatching::DpHandlerDescription,
->;
+pub type HandlerType<Output> =
+    teloxide::prelude::Handler<'static, DependencyMap, Output, DpHandlerDescription>;
 
 pub trait Handler<T>
 where
-    T: Sync + Send,
-    Self::Output: Send + Sync,
-    Self::Output: 'static,
+    T: 'static + Sync + Send,
+    Self::Output: 'static + Send + Sync,
 {
     type Output;
 

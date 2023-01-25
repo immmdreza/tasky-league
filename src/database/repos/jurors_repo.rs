@@ -36,6 +36,21 @@ impl Juror {
     }
 }
 
+pub struct JurorLite {
+    player_id: i64,
+    id: i64,
+}
+
+impl JurorLite {
+    pub fn player_id(&self) -> i64 {
+        self.player_id
+    }
+
+    pub fn id(&self) -> i64 {
+        self.id
+    }
+}
+
 impl JurorRepo<'_> {
     pub async fn is_juror(&self, player_id: i64) -> anyhow::Result<bool> {
         let res = sqlx::query!(
@@ -57,6 +72,21 @@ impl JurorRepo<'_> {
         .await?;
 
         Ok(res.exists.unwrap_or_default())
+    }
+
+    pub async fn get_lite_juror_by_telegram_id(
+        &self,
+        telegram_id: i64,
+    ) -> anyhow::Result<JurorLite> {
+        let res = sqlx::query_as!(
+            JurorLite,
+            "select player_id, id from jurors where telegram_id = $1",
+            telegram_id
+        )
+        .fetch_one(self.get_pool())
+        .await?;
+
+        Ok(res)
     }
 }
 

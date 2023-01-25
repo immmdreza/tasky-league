@@ -1,3 +1,5 @@
+pub mod handlers;
+
 use teloxide::{
     payloads::SendMessageSetters,
     types::{KeyboardButton, KeyboardMarkup, KeyboardRemove},

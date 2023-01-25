@@ -3,12 +3,14 @@ use teloxide::types::{CallbackQuery, Message, UserId};
 use crate::handlers::HandlerType;
 
 pub mod arash;
+pub mod juror;
 pub mod player;
 
 #[derive(Debug, Clone)]
 pub enum RawRole {
     Arash,
     Player,
+    Juror,
 }
 
 #[derive(Debug, Clone)]

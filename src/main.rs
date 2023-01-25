@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use database::context::DbContext;
 use handlers::{
-    messages::{commands::CommandsMessageHandler, register, unexpected::UnexpectedMessageHandler},
+    messages::{register, start, unexpected::UnexpectedMessageHandler},
     role_based::role,
     Handler,
 };
@@ -36,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
                 .chain(Message::filter_text())
                 .branch(role::branch())
                 .branch(search::branch())
-                .branch(CommandsMessageHandler::branch())
+                .branch(start::branch())
                 .branch(register::branch())
                 .branch(UnexpectedMessageHandler::branch()),
         ),
