@@ -3,8 +3,6 @@ pub mod extensions;
 pub mod handlers;
 pub mod roles;
 
-use std::sync::Arc;
-
 use database::context::DbContext;
 use handlers::{
     messages::{register, start, unexpected::UnexpectedMessageHandler},
@@ -25,7 +23,7 @@ async fn main() -> anyhow::Result<()> {
 
     let url = std::env::var("DATABASE_URL")?;
     let pool = sqlx::PgPool::connect(&url).await?;
-    let ctx = Arc::new(DbContext::new(pool));
+    let ctx = DbContext::new(pool);
 
     let bot = Bot::from_env();
 
