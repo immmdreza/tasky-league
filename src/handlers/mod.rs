@@ -1,6 +1,6 @@
-pub mod messages;
-pub mod prelude;
-pub mod role_based;
+pub(self) mod messages;
+pub(self) mod prelude;
+pub mod setup;
 
 pub use macros::handler;
 use teloxide::{dispatching::DpHandlerDescription, prelude::DependencyMap};

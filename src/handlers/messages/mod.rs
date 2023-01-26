@@ -9,6 +9,7 @@ use self::errors::MessageHasNoSender;
 use super::Handler;
 
 pub mod register;
+pub mod role;
 pub mod search;
 pub mod start;
 pub mod unexpected;
