@@ -1,7 +1,4 @@
-use crate::{
-    handlers::prelude::*,
-    roles::{player::PlayerRole, Role},
-};
+use crate::{handlers::prelude::*, roles::player::PlayerRole};
 
 #[handler(for = "Message", param = "PlayerRole", param = "DbContext")]
 pub async fn player(ctx: PlayerMessageHandler) -> DefaultHandlerReturnType {

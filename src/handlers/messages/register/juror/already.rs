@@ -1,7 +1,4 @@
-use crate::{
-    handlers::prelude::*,
-    roles::{juror::JurorRole, Role},
-};
+use crate::handlers::prelude::*;
 
 #[handler(for = "Message")]
 pub async fn already(ctx: AlreadyMessageHandler) -> DefaultHandlerReturnType {
