@@ -5,6 +5,7 @@ use super::{IdentifyCredit, RawRole, Role};
 #[derive(Debug, Clone)]
 pub struct PlayerRole {
     player_id: i64,
+    telegram_id: i64,
 }
 
 impl PlayerRole {
@@ -27,6 +28,10 @@ impl PlayerRole {
             },
         ))
     }
+
+    pub fn telegram_id(&self) -> i64 {
+        self.telegram_id
+    }
 }
 
 impl Role for PlayerRole {
@@ -44,6 +49,7 @@ impl Role for PlayerRole {
             let player = players.get_by_telegram_id(telegram_id).await.ok()?;
             player.map(|player| PlayerRole {
                 player_id: *player.get_id(),
+                telegram_id: player.telegram_id(),
             })
         })
     }

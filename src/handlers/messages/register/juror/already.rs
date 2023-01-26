@@ -4,11 +4,11 @@ use crate::{
 };
 
 #[handler(for = "Message")]
-pub async fn juror(ctx: JurorMessageHandler) -> DefaultHandlerReturnType {
-    ctx.reply_text("What's up partner?").await?;
+pub async fn already(ctx: AlreadyMessageHandler) -> DefaultHandlerReturnType {
+    ctx.reply_text("You'r already a juror boss!").await?;
     Ok(())
 }
 
 fn filter_builder() -> DefaultHandlerType {
-    JurorRole::identify_message()
+    pass_filter()
 }

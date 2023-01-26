@@ -88,6 +88,18 @@ impl JurorRepo<'_> {
 
         Ok(res)
     }
+
+    pub async fn get_lite_juror_by_player_id(&self, player_id: i64) -> anyhow::Result<JurorLite> {
+        let res = sqlx::query_as!(
+            JurorLite,
+            "select player_id, id from jurors where player_id = $1",
+            player_id
+        )
+        .fetch_one(self.get_pool())
+        .await?;
+
+        Ok(res)
+    }
 }
 
 #[cfg(test)]

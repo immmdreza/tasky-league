@@ -2,11 +2,17 @@ pub(self) mod messages;
 pub(self) mod prelude;
 pub mod setup;
 
-pub use macros::handler;
 use teloxide::{dispatching::DpHandlerDescription, prelude::DependencyMap};
+
+pub use macros::handler;
+pub use teloxide::dptree;
 
 pub type HandlerType<Output> =
     teloxide::prelude::Handler<'static, DependencyMap, Output, DpHandlerDescription>;
+
+pub type DefaultHandlerReturnType = anyhow::Result<()>;
+
+pub type DefaultHandlerType = HandlerType<DefaultHandlerReturnType>;
 
 pub trait Handler<T>
 where

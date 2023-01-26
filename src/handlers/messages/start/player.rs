@@ -5,7 +5,7 @@ use crate::{
 };
 
 #[handler(for = "Message")]
-pub async fn player(ctx: PlayerMessageHandler) -> anyhow::Result<()> {
+pub async fn player(ctx: PlayerMessageHandler) -> DefaultHandlerReturnType {
     ctx.reply_text("Welcome back Player!")
         .single_keyboard_button("Sign for Juror")
         .await?;
@@ -13,6 +13,6 @@ pub async fn player(ctx: PlayerMessageHandler) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn filter_builder() -> HandlerType<anyhow::Result<()>> {
+fn filter_builder() -> DefaultHandlerType {
     PlayerRole::identify_message()
 }

@@ -1,6 +1,6 @@
 use crate::database::{DbContext, JurorRepo};
 
-use super::{IdentifyCredit, RawRole, Role};
+use super::{player::PlayerRole, IdentifyCredit, RawRole, Role};
 
 #[derive(Debug, Clone)]
 pub struct JurorRole {
@@ -15,6 +15,25 @@ impl JurorRole {
 
     pub fn player_id(&self) -> i64 {
         self.player_id
+    }
+
+    pub fn map_message_from_player<T>() -> crate::handlers::HandlerType<T>
+    where
+        T: 'static,
+    {
+        teloxide::dptree::filter_map_async(|player_role: PlayerRole, db: DbContext| async move {
+            let players: JurorRepo = db.get();
+
+            let player = players
+                .get_lite_juror_by_player_id(player_role.player_id())
+                .await
+                .ok()?;
+
+            Some(JurorRole {
+                player_id: player.player_id(),
+                id: player.id(),
+            })
+        })
     }
 }
 
